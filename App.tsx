@@ -83,10 +83,36 @@ export default function App() {
   const applyTranscript = () => {
     const text = transcript.trim();
     if (!text) return;
-    if (!from) {
+
+    // Recognize common Telugu, transliterated Telugu, and English route phrases.
+    const routeMatch = text.match(/^(.*?)\\s*(?:నుంచి|నుండి|nunchi|nundi|from)\\s+(.*?)$/i);
+    if (routeMatch) {
+      const origin = routeMatch[1].trim().replace(/^(నేను|we|i)\\s+/i, "");
+      const destination = routeMatch[2]
+        .trim()
+        .replace(/\\s*(?:వెళ్లాలి|వెళ్ళాలి|వెళ్ళాలనుకుంటున్నాను|vellali|vellanu|కి వెళ్లాలి|కి వెళ్ళాలి|please|ఉండాలి)\\s*$/i, "")
+        .replace(/^to\\s+/i, "")
+        .trim();
+
+      if (origin && destination) {
+        setFrom(origin);
+        setTo(destination);
+        setTranscript("");
+        return;
+      }
+    }
+
+    // If the phrase doesn't contain both places, use it for the next empty field.
+    if (!from.trim()) {
       setFrom(text);
-    } else {
+    } else if (!to.trim()) {
       setTo(text);
+    } else {
+      Alert.alert(
+        isTelugu ? "ప్రదేశాలు ఇప్పటికే ఉన్నాయి" : "Places already entered",
+        isTelugu ? "కొత్త వాక్యాన్ని ఉపయోగించే ముందు ప్రదేశాలను ఖాళీ చేయండి." : "Clear the route fields before applying another phrase."
+      );
+      return;
     }
     setTranscript("");
   };
