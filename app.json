@@ -1,0 +1,32 @@
+{
+  "expo": {
+    "name": "Voice Travel Assistant",
+    "slug": "voice-travel-assistant",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "backgroundColor": "#F5FAF7",
+    "android": {
+      "package": "com.mahendradalavai.voicetravelassistant",
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ]
+    },
+    "ios": {
+      "bundleIdentifier": "com.mahendradalavai.voicetravelassistant",
+      "infoPlist": {
+        "NSMicrophoneUsageDescription": "Voice Travel Assistant uses your microphone to understand where you want to go.",
+        "NSSpeechRecognitionUsageDescription": "Speech recognition converts your spoken destination into text."
+      }
+    },
+    "plugins": [
+      [
+        "expo-speech-recognition",
+        {
+          "microphonePermission": "Allow Voice Travel Assistant to use your microphone.",
+          "speechRecognitionPermission": "Allow Voice Travel Assistant to recognize your speech."
+        }
+      ]
+    ]
+  }
+}
