@@ -36,14 +36,14 @@ npx expo start --dev-client
 
 ## Current prototype limitations
 
-- The route button validates and previews the entered places; it does not fetch real directions yet.
+- The route button opens Google Maps directions for the entered origin and destination. Google Maps provides current route options; an embedded map is not shown inside the app.
 - Voice recognition fills the transcript preview. Use **Use this text** to put the recognized phrase into the first empty route field.
-- No maps provider, ride-hailing service, API key, or Supabase integration is connected in this version.
+- Google Maps directions open through a URL and require no API key in this app. No embedded map, ride-hailing service, or Supabase integration is connected.
 
 ## Next steps
 
 1. Improve spoken-place parsing so a phrase like “Dhone nunchi Hyderabad vellali” fills both route fields.
-2. Add a maps/directions provider after deciding on the required coverage and budget.
+2. Consider an embedded map and in-app route details if a maps provider/API key is configured.
 3. Add optional text-to-speech responses and route alternatives.
 
 ## Security
