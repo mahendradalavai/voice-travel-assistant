@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
   Alert,
+  Linking,
   Pressable,
   SafeAreaView,
   ScrollView,
@@ -85,13 +86,13 @@ export default function App() {
     if (!text) return;
 
     // Recognize common Telugu, transliterated Telugu, and English route phrases.
-    const routeMatch = text.match(/^(.*?)\\s*(?:నుంచి|నుండి|nunchi|nundi|from)\\s+(.*?)$/i);
+    const routeMatch = text.match(/^(.*?)\s*(?:నుంచి|నుండి|nunchi|nundi|from)\s+(.*?)$/i);
     if (routeMatch) {
-      const origin = routeMatch[1].trim().replace(/^(నేను|we|i)\\s+/i, "");
+      const origin = routeMatch[1].trim().replace(/^(నేను|we|i)\s+/i, "");
       const destination = routeMatch[2]
         .trim()
-        .replace(/\\s*(?:వెళ్లాలి|వెళ్ళాలి|వెళ్ళాలనుకుంటున్నాను|vellali|vellanu|కి వెళ్లాలి|కి వెళ్ళాలి|please|ఉండాలి)\\s*$/i, "")
-        .replace(/^to\\s+/i, "")
+        .replace(/\s*(?:వెళ్లాలి|వెళ్ళాలి|వెళ్ళాలనుకుంటున్నాను|vellali|vellanu|కి వెళ్లాలి|కి వెళ్ళాలి|please|ఉండాలి)\s*$/i, "")
+        .replace(/^to\s+/i, "")
         .trim();
 
       if (origin && destination) {
@@ -121,6 +122,27 @@ export default function App() {
     setFrom("");
     setTo("");
     setTranscript("");
+  };
+
+  const openRouteInMaps = async () => {
+    const origin = from.trim();
+    const destination = to.trim();
+
+    if (!origin || !destination) return;
+
+    // Google Maps handles place lookup and live route options without an API key.
+    const url = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}`;
+
+    try {
+      await Linking.openURL(url);
+    } catch {
+      Alert.alert(
+        isTelugu ? "మ్యాప్స్ తెరవలేకపోయాం" : "Could not open Maps",
+        isTelugu
+          ? "బ్రౌజర్ లేదా Google Maps అందుబాటులో ఉందో చూసి మళ్లీ ప్రయత్నించండి."
+          : "Check that a browser or Google Maps is available, then try again."
+      );
+    }
   };
 
   return (
@@ -237,12 +259,7 @@ export default function App() {
               );
               return;
             }
-            Alert.alert(
-              isTelugu ? "ప్రయాణ వివరాలు సిద్ధం" : "Trip details saved",
-              isTelugu
-                ? `ప్రారంభం: ${from}\nగమ్యం: ${to}\nతర్వాతి దశలో మార్గ సూచనలు జోడిస్తాం.`
-                : `From: ${from}\nTo: ${to}\nRoute directions will be added in the next phase.`
-            );
+            void openRouteInMaps();
           }}
         >
           <Text style={styles.findButtonText}>{isTelugu ? "నా దారి కనుక్కోండి" : "Find my route"}  →</Text>
